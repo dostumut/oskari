@@ -42,16 +42,18 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
 
                         console.log("onclick latest data", element);
                     },
-                    onmouseover: function (d) {
+                    onmouseover: function (d,e) {
 
                         //var k = ".c3-shape-" + d.index;
                         //make the bar red
                         //d3.selectAll(k).style("fill", "red");
                         //event.stopPropagation();
-                        console.log("onmouseover latest data d", d);
+                        console.log("onmouseover latest data d", d.id);
+
+
 
                         //make all teh bar opacity 0.1
-                        d3.selectAll(".c3-shape").style("opacity", 0.5);
+                        d3.selectAll(".c3-shape").style("opacity", 0.1);
                         var k = ".c3-shape-" + d.index;
                         //make the clicked bar opacity 1
                         d3.selectAll(k).style("opacity", 1)
@@ -60,6 +62,7 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                         },
                     onmouseout: function (d) {
                         d3.selectAll(".c3-shape").style("opacity", 1);
+                        log.info('Region selected! ', event.getRegion());
 
                         //var k = ".c3-shape-" + d.index;
                         //make the clicked bar opacity
@@ -102,7 +105,7 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                 }
             });
 
-//hacking way of creating charts ..Try to find better way!
+
             this.chart = c3.generate({
                 bindto: "#chart2",
                 data: {
