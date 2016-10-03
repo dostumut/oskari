@@ -12,7 +12,16 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
         this.instance = instance;
         this.template = jQuery('<div id="chart1" style=" width:100%; height: 100%; overflow: auto; resize: both; padding-right:40px;padding-left:40px; "></div>');
         this.loc = localization;
+      
     }, {
+
+       highlight: function() {
+         SelectedData(d);
+         var sb = this.instance.getSandbox();
+         var currentRegionset = id;
+         var eventBuilder = sb.getEventBuilder('StatsGrid.RegionSelectedEvent');
+         sb.notifyAll(eventBuilder(currentRegionset, id[d.index]));
+         },
         getTitle: function () {
             //return this.loc.title;
             return "Bar Chart";
@@ -22,7 +31,8 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
             container.append(content);
         },
 
-        initChart: function(regions, data) {
+        initChart: function(regions,data,id) {
+
             if (this.chart) {
                 // ui not on screen yet
                 this.chart = this.removeChart();
@@ -37,32 +47,40 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                 data: {
                     columns: data,
                     type:'bar',
-                    onclick: function (d, element) {
-                        //give the id and index of the latest data set.
+                    onclick: function (d, element) {//give the id and index of the latest data set.
 
                         console.log("onclick latest data", element);
                     },
-                    onmouseover: function (d,e) {
+                    onmouseover:SelectData,
+                        /*function (d,e) {
 
                         //var k = ".c3-shape-" + d.index;
                         //make the bar red
                         //d3.selectAll(k).style("fill", "red");
                         //event.stopPropagation();
-                        console.log("onmouseover latest data d", d.id);
+                        console.log("onmouseover latest data d",d);
 
+                       var getindex=d.index;
+                        console.log(data[getindex]);
+
+                        console.log(getindex);
+                       drilldown(getindex);
 
 
                         //make all teh bar opacity 0.1
                         d3.selectAll(".c3-shape").style("opacity", 0.1);
                         var k = ".c3-shape-" + d.index;
+
                         //make the clicked bar opacity 1
-                        d3.selectAll(k).style("opacity", 1)
+                        d3.selectAll(k).style("opacity", 1);
+                        
                         event.stopPropagation()
 
                         },
+                        */
                     onmouseout: function (d) {
                         d3.selectAll(".c3-shape").style("opacity", 1);
-                        log.info('Region selected! ', event.getRegion());
+                        //TODO: log.info('Region selected! ', event.getRegion());
 
                         //var k = ".c3-shape-" + d.index;
                         //make the clicked bar opacity
@@ -105,6 +123,35 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                 }
             });
 
+            /*function drilldown(getindex){
+
+                console.log('Call for ', getindex);
+
+
+            };
+            */
+
+
+
+            function SelectData(d,e) {
+
+                d3.selectAll(".c3-shape").style("opacity", 0.1);
+                var k = ".c3-shape-" + d.index;
+                console.log("selected regionid",id[d.index],id.indexOf(id[d.index]));
+                console.log(data);
+                //make the clicked bar opacity 1
+                d3.selectAll(k).style("opacity", 1);
+                var sb = this.instance.getSandbox();
+                var currentRegionset =id;
+                var eventBuilder = sb.getEventBuilder('StatsGrid.RegionSelectedEvent');
+                sb.notifyAll(eventBuilder(currentRegionset, id[d.index]));
+                //We need to include "d", since the index will
+                //always be the second value passed in to the function
+
+
+            };
+
+          
 
             this.chart = c3.generate({
                 bindto: "#chart2",
@@ -182,6 +229,8 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                 
             });
         },
+
+
         /*
         Data is in this format:
 {
@@ -216,9 +265,12 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
     ]
 }
          */
-        
+
+
         showChart : function(data) {
+
             var list = data.indicators;
+
             if(!list.length) {
                 return;
             }
@@ -226,9 +278,12 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
             var itemsToSort = data.data;
 
             itemsToSort.sort(function(a, b) {
-                return (a.values[sortBy] || 0) - (b.values[sortBy] || 0);
+                return  (a.values[sortBy] || 0) - (b.values[sortBy] || 0);
+
             });
+
             var sortedRegions = [];
+            var sortedRegionsId=[];
             var sortedValues = {};
             list.forEach(function(ind) {
                 //This is for readable selectors like year:1994 sex: male
@@ -241,10 +296,12 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                     }
                 }
                 sortedValues[ind.hash] = [ind.name + ' ' + txt];
+
             });
 
             itemsToSort.forEach(function(item) {
                 sortedRegions.push(item.name);
+                sortedRegionsId.push(item.id);
                 for(var hash in item.values) {
                     sortedValues[hash].push(item.values[hash]);
                 }
@@ -254,9 +311,7 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
             for(var hash in sortedValues) {
                 values.push(me.sanitize(sortedValues[hash]));
             }
-            
-
-            this.initChart(sortedRegions, values);
+            this.initChart(sortedRegions, values,sortedRegionsId);
 
         },
         sanitize : function(list, defaultValue)  {
@@ -296,6 +351,7 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
 
             itemsToSort.forEach(function(item) {
                 sortedRegions.push(item.name);
+                sortedRegions.push(item.id);
                 sortedValues.push(item.value);
             });
 
@@ -309,7 +365,8 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
             this.latestData[event.index].regionId
 */
 
-            this.initChart(sortedRegions, [[name].concat(sortedValues)]);
+            this.initChart(sortedRegions.name, [[name].concat(sortedValues)]);
+
         },
 
         removeChart: function() {

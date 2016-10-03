@@ -125,7 +125,7 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Flyout',
             this.tabsData.chart1.showChart(data);
         },
         regionSelected : function(region, regionset) {
-            //this.tabsData.chart1.showChart(data);
+            //this.tabsData.chart1.showChart(region);
         }
 
     }, {

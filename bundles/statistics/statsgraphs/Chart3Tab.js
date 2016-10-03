@@ -15,7 +15,7 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart3Tab',
     }, {
         getTitle: function () {
             //return this.loc.title;
-            return "Scatter Plot";
+            return "Point Chart";
         },
         addTabContent: function (container) {
             var content = this.template.clone();

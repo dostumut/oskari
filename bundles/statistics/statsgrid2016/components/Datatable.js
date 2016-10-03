@@ -181,7 +181,10 @@ Oskari.clazz.define('Oskari.statistics.statsgrid.Datatable', function(sandbox) {
                 me.handleRegionsetChanged(event.getRegionset());
             }
             me.grid.select(event.getRegion());
-        });
+            //d3.selectAll(".c3-shape").style("opacity", 0.1);
+            //make the clicked bar opacity 1
+           // d3.selectAll(".c3-shape-"+(event.getRegion()) ).style("opacity", 1);
+            }),
 
         this.service.on('StatsGrid.ActiveIndicatorChangedEvent', function(event) {
             var current = event.getCurrent();

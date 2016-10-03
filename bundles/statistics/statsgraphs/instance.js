@@ -24,6 +24,7 @@ Oskari.clazz.define(
         afterStart: function (sandbox) {
             var me = this;
             this.service = sandbox.getService('Oskari.statistics.statsgrid.StatisticsService');
+
             /*
             // FOR DEBUGGING
             var sb = this.getSandbox();
