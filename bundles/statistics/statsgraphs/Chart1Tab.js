@@ -15,13 +15,6 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
       
     }, {
 
-       highlight: function() {
-         SelectedData(d);
-         var sb = this.instance.getSandbox();
-         var currentRegionset = id;
-         var eventBuilder = sb.getEventBuilder('StatsGrid.RegionSelectedEvent');
-         sb.notifyAll(eventBuilder(currentRegionset, id[d.index]));
-         },
         getTitle: function () {
             //return this.loc.title;
             return "Bar Chart";
@@ -133,6 +126,11 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
 
 
 
+
+
+
+            var sb = this.instance.getSandbox();
+            var regionset = this.currentRegionSet;
             function SelectData(d,e) {
 
                 d3.selectAll(".c3-shape").style("opacity", 0.1);
@@ -141,16 +139,11 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                 console.log(data);
                 //make the clicked bar opacity 1
                 d3.selectAll(k).style("opacity", 1);
-                var sb = this.instance.getSandbox();
-                var currentRegionset =id;
                 var eventBuilder = sb.getEventBuilder('StatsGrid.RegionSelectedEvent');
-                sb.notifyAll(eventBuilder(currentRegionset, id[d.index]));
+                sb.notifyAll(eventBuilder(regionset, id[d.index]));
                 //We need to include "d", since the index will
                 //always be the second value passed in to the function
-
-
             };
-
           
 
             this.chart = c3.generate({
@@ -270,6 +263,7 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
         showChart : function(data) {
 
             var list = data.indicators;
+            this.currentRegionSet = data.regionset.id;
 
             if(!list.length) {
                 return;
