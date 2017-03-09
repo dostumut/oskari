@@ -83,16 +83,39 @@ Oskari.clazz.define(
             console.log(event.getName(), event);
         },
 */
+
+
         _handleDataChangeEvent: function () {
 
             var me = this;
+
+
             this.service.getCurrentDataset(function(err, data) {
                 if(err) {
                     console.warn(err);
                     return;
                 }
-                me.getFlyout().chartDataChanged(data);
-            });
+                
+
+        /*
+                me.service.getIndicatorMetadata(data.indicators[0].datasource.id, data.indicators[0].id, function(err, indicator) {
+
+                    var indicatorValue = data.indicators[0].selections[Object.keys(data.indicators[0].selections)];
+                    if(indicator) {
+                        for(var i = 0; i < indicator.selectors[0].allowedValues.length; i++) {
+                            if(indicator.selectors[0].allowedValues[i].id == indicatorValue) {
+                                data.indicators[0].selections[Object.keys(data.indicators[0].selections)] =
+                                    indicator.selectors[0].allowedValues[0].name;
+                            }
+                        }
+                    }
+            */
+
+                    me.getFlyout().chartDataChanged(data);
+                });
+
+        //});
+
 
 /*
             var regionSetId = this.service.getStateService().getRegionset();

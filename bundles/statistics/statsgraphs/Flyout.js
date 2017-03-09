@@ -122,13 +122,61 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Flyout',
             }
         },
         chartDataChanged : function(data) {
+            this.data = data;
             this.tabsData.chart1.showChart(data);
-        },
-        regionSelected : function(region, regionset) {
-            //this.tabsData.chart1.showChart(region);
-        }
 
-    }, {
+
+        },
+
+        regionSelected : function(region, regionset) {
+
+
+
+            this.tabsData.chart1.showChart(this.data);
+
+            var myArray=this.data.data;
+            var searchTerm = region,
+                index = -1;
+            for(var i = 0, len = myArray.length; i < len; i++) {
+                if (myArray[i].id === searchTerm) {
+                    index = i;
+                    break;
+                }
+            };
+
+
+            d3.selectAll(".c3-shape").style("opacity", 0.1)
+            var k = ".c3-shape-" + index;
+            d3.selectAll(k).style("opacity", 1);
+
+
+             console.log(index);
+            ;
+            
+
+
+            //make the clicked bar opacity 1
+            //d3.selectAll(k).style("opacity", 1);
+            /*var val2=this.tabsData.chart1.chart.data()[0].values;
+             //gives array of objects [{x: 1, value: 12700, id: "Helsingin asuntorakentamisessa valmistuvan asuinrakennusten kerrosalan (m2) ennuste Vuosi: 0 ", index: 1}]
+             console.log("val",val);
+             console.log("val2",val2)
+             for (var i = 0; i < val.length; i++) {
+             //gives each object like the example above
+             console.log("values ",val[i]);
+             //0,1,2,3,....
+             var objvalind = val[i].index;
+             console.log(objvalind);
+             var reg= val.indexOf(region);
+             }
+             console.log(reg);
+             //var reg= region.indexOf(region[d.index])
+
+
+             }
+             */
+
+        }}, {
         /**
          * @property {String[]} protocol
          * @static

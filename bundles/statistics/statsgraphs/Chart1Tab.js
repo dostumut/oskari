@@ -25,7 +25,6 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
         },
 
         initChart: function(regions,data,id) {
-
             if (this.chart) {
                 // ui not on screen yet
                 this.chart = this.removeChart();
@@ -40,11 +39,8 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
                 data: {
                     columns: data,
                     type:'bar',
-                    onclick: function (d, element) {//give the id and index of the latest data set.
-
-                        console.log("onclick latest data", element);
-                    },
-                    onmouseover:SelectData,
+                    onclick:SelectData,
+                   // onmouseover:SelectData,
                         /*function (d,e) {
 
                         //var k = ".c3-shape-" + d.index;
@@ -261,7 +257,6 @@ Oskari.clazz.define('Oskari.mapframework.statsgraphs.Chart1Tab',
 
 
         showChart : function(data) {
-
             var list = data.indicators;
             this.currentRegionSet = data.regionset.id;
 
